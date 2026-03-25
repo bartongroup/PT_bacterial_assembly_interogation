@@ -52,6 +52,7 @@ for faa in "${faa_files[@]}"; do
         --data_dir "${EGGNOG_DB_DIR}" \
         --cpu "${THREADS}" \
         --override \
+        --excel \
         > "${LOG_DIR}/${isolate_id}.eggnog.stdout.log" \
         2> "${LOG_DIR}/${isolate_id}.eggnog.stderr.log"
 done

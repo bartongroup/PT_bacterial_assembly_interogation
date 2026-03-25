@@ -67,6 +67,7 @@ for gbk in "${gbk_files[@]}"; do
         --output-basename "${isolate_id}" \
         --taxon bacteria \
         --pfam2go \
+        --genefinding-tool prodigal \
         --cpus "${THREADS}" \
         --databases "${ANTISMASH_DB}" \
         "${gbk}" \
