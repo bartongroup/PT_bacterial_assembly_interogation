@@ -26,13 +26,20 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
-from typing import Iterable, List, Tuple
+from typing import List, Tuple
 
 import pandas as pd
 
 
 def parse_args() -> argparse.Namespace:
-    """Parse command-line arguments."""
+    """
+    Parse command-line arguments.
+
+    Returns
+    -------
+    argparse.Namespace
+        Parsed command-line arguments.
+    """
     parser = argparse.ArgumentParser(
         description="Parse eggNOG-mapper annotation files."
     )
@@ -69,7 +76,7 @@ def split_field(value: object, separator: str = ",") -> List[str]:
         return []
 
     text = str(value).strip()
-    if text in {"", "-", "None", "NA", "nan"}:
+    if text in {"", "-", "--", "None", "NA", "nan"}:
         return []
 
     return [item.strip() for item in text.split(separator) if item.strip()]
@@ -89,13 +96,28 @@ def load_emapper_annotations(annotation_path: Path) -> pd.DataFrame:
     pd.DataFrame
         Parsed annotation table.
     """
+    header_line_index = None
+
+    with annotation_path.open(mode="r", encoding="utf-8") as handle:
+        for index, line in enumerate(handle):
+            if line.startswith("#query"):
+                header_line_index = index
+                break
+
+    if header_line_index is None:
+        raise ValueError(
+            f"Could not find eggNOG header line starting with '#query' in "
+            f"{annotation_path}"
+        )
+
     df = pd.read_csv(
         filepath_or_buffer=annotation_path,
         sep="\t",
-        comment="#",
+        header=header_line_index,
         dtype=str,
         low_memory=False,
     )
+
     return df
 
 
@@ -131,6 +153,7 @@ def build_long_table(
     source_column: str,
     value_name: str,
     separator: str = ",",
+    strip_prefix: str | None = None,
 ) -> pd.DataFrame:
     """
     Convert a delimited annotation column into a long-format table.
@@ -145,6 +168,8 @@ def build_long_table(
         Name of the long-format value column.
     separator : str, optional
         Delimiter used in the source column, by default ",".
+    strip_prefix : str | None, optional
+        Prefix to remove from each entry, by default None.
 
     Returns
     -------
@@ -165,11 +190,18 @@ def build_long_table(
     for _, row in df.iterrows():
         entries = split_field(value=row[source_column], separator=separator)
         for entry in entries:
+            clean_entry = entry
+            if strip_prefix is not None and clean_entry.startswith(strip_prefix):
+                clean_entry = clean_entry[len(strip_prefix):]
+
+            if clean_entry in {"", "-", "--"}:
+                continue
+
             records.append(
                 {
                     "isolate_id": row["isolate_id"],
                     "#query": row["#query"],
-                    value_name: entry,
+                    value_name: clean_entry,
                 }
             )
 
@@ -216,7 +248,7 @@ def build_cog_long_table(df: pd.DataFrame) -> pd.DataFrame:
             continue
 
         text = str(value).strip()
-        if text in {"", "-", "NA", "nan"}:
+        if text in {"", "-", "--", "NA", "nan"}:
             continue
 
         for category in text:
@@ -242,7 +274,9 @@ def build_cog_long_table(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def main() -> None:
-    """Run the eggNOG parsing workflow."""
+    """
+    Run the eggNOG parsing workflow.
+    """
     args = parse_args()
     eggnog_dir = Path(args.eggnog_dir)
     out_dir = Path(args.out_dir)
@@ -271,6 +305,7 @@ def main() -> None:
         df=master_df,
         source_column="KEGG_ko",
         value_name="ko_id",
+        strip_prefix="ko:",
     )
     ko_long.to_csv(
         path_or_buf=out_dir / "eggnog_ko_long.tsv",
