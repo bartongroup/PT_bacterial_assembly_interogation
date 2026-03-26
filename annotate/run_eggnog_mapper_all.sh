@@ -3,8 +3,10 @@
 #$ -j y
 #$ -V
 #$ -pe smp 16
-#$ -mods l_hard mfree 32G
-#$ -adds l_hard h_vmem 32G
+#$ -mods l_hard mfree 42G
+#$ -adds l_hard h_vmem 42G
+
+#  conda activate eggnog_env
 
 set -euo pipefail
 
@@ -12,7 +14,7 @@ readonly PROJECT_DIR="/home/pthorpe001/david_bul/pthorpe001/2026_20th_March_Micr
 readonly PROTEIN_DIR="${PROJECT_DIR}/protein_fastas"
 readonly EGGNOG_OUT_DIR="${PROJECT_DIR}/eggnog_results"
 readonly LOG_DIR="${PROJECT_DIR}/logs"
-readonly EGGNOG_DB_DIR="/cluster/gjb_lab/pthorpe001/databases/eggnog"
+readonly EGGNOG_DB_DIR="/home/pthorpe001/data/databases/eggnog"
 readonly THREADS="16"
 
 mkdir -p "${EGGNOG_OUT_DIR}"
@@ -45,7 +47,7 @@ for faa in "${faa_files[@]}"; do
     echo "[INFO] Running eggNOG-mapper for ${isolate_id}"
 
     emapper.py \
-        --input "${faa}" \
+        -i "${faa}" \
         --itype proteins \
         --output "${isolate_id}" \
         --output_dir "${isolate_out_dir}" \

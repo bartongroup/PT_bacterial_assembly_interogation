@@ -17,8 +17,7 @@ readonly RESULTS_DIR="${PROJECT_DIR}/bakta_proteins_results"
 readonly METADATA_DIR="${PROJECT_DIR}/metadata"
 readonly LOG_DIR="${PROJECT_DIR}/logs"
 readonly THREADS="16"
-
-readonly BAKTA_DB_DEFAULT="/cluster/gjb_lab/pthorpe001/databases/bakta_db"
+readonly BAKTA_DB_PATH="/home/pthorpe001/data/databases/bakta"
 
 mkdir -p "${RESULTS_DIR}" "${METADATA_DIR}" "${LOG_DIR}"
 
@@ -27,15 +26,8 @@ if ! command -v bakta_proteins >/dev/null 2>&1; then
     exit 1
 fi
 
-if [[ -n "${BAKTA_DB:-}" ]]; then
-    readonly BAKTA_DB_PATH="${BAKTA_DB}"
-else
-    readonly BAKTA_DB_PATH="${BAKTA_DB_DEFAULT}"
-fi
-
 if [[ ! -d "${BAKTA_DB_PATH}" ]]; then
     echo "[ERROR] Bakta database directory not found: ${BAKTA_DB_PATH}" >&2
-    echo "[ERROR] Please export BAKTA_DB or edit BAKTA_DB_DEFAULT in the script." >&2
     exit 1
 fi
 
@@ -75,7 +67,6 @@ for faa in "${faa_files[@]}"; do
         --prefix "${isolate_id}" \
         --threads "${THREADS}" \
         --force \
-        --db /home/pthorpe001/data/databases/bakta \
         "${faa}" \
         > "${LOG_DIR}/${isolate_id}.bakta_proteins.stdout.log" \
         2> "${LOG_DIR}/${isolate_id}.bakta_proteins.stderr.log"
