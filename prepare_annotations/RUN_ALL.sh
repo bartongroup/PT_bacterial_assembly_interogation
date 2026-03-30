@@ -33,4 +33,17 @@ python PT_bacterial_assembly_interogation/prepare_annotations/plot_ko_pcoa_and_i
     --out_dir /home/pthorpe001/david_bul/pthorpe001/2026_20th_March_Microbes_NG/post_annotation/ko_pcoa_and_intersections \
     --top_n_intersections 20
 
-    
+
+python ko_group_enrichment.py \
+    --ko_matrix_tsv /home/pthorpe001/david_bul/pthorpe001/2026_20th_March_Microbes_NG/post_annotation/ko_matrices/ko_presence_absence_matrix.tsv \
+    --metadata_tsv /home/pthorpe001/david_bul/pthorpe001/2026_20th_March_Microbes_NG/post_annotation/metadata/isolate_groups.tsv \
+    --group_column group \
+    --group_a rhizosphere \
+    --group_b bulk \
+    --out_tsv /home/pthorpe001/david_bul/pthorpe001/2026_20th_March_Microbes_NG/post_annotation/ko_enrichment/ko_group_enrichment.tsv
+
+
+
+python plot_pgpr_heatmap.py \
+    --pgpr_matrix_tsv /home/pthorpe001/david_bul/pthorpe001/2026_20th_March_Microbes_NG/post_annotation/pgpr_screen/pgpr_presence_absence_matrix.tsv \
+    --out_dir /home/pthorpe001/david_bul/pthorpe001/2026_20th_March_Microbes_NG/post_annotation/pgpr_heatmap
