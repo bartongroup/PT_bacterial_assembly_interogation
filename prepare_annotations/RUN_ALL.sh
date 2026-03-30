@@ -57,14 +57,25 @@ python PT_bacterial_assembly_interogation/prepare_annotations/build_go_matrices.
     --out_dir /home/pthorpe001/david_bul/pthorpe001/2026_20th_March_Microbes_NG/post_annotation/go_matrices
 
 
-python plot_go_pcoa_and_intersections.py \
+python PT_bacterial_assembly_interogation/prepare_annotations/plot_go_pcoa_and_intersections.py \
     --go_matrix_tsv /home/pthorpe001/david_bul/pthorpe001/2026_20th_March_Microbes_NG/post_annotation/go_matrices/go_presence_absence_matrix.tsv \
     --out_dir /home/pthorpe001/david_bul/pthorpe001/2026_20th_March_Microbes_NG/post_annotation/go_pcoa_and_intersections \
     --top_n_intersections 20
 
+
 ##################
 # dbCAN
-python summarise_dbcan_results.py \
-    --cazy_matrix_tsv /home/pthorpe001/david_bul/pthorpe001/2026_20th_March_Microbes_NG/post_annotation/dbcan_parsed/dbcan_cazy_family_presence_absence_matrix.tsv \
+
+python PT_bacterial_assembly_interogation/prepare_annotations/summarise_dbcan_results.py \
+    --parsed_dbcan_dir /home/pthorpe001/david_bul/pthorpe001/2026_20th_March_Microbes_NG/post_annotation/dbcan_parsed \
     --out_dir /home/pthorpe001/david_bul/pthorpe001/2026_20th_March_Microbes_NG/post_annotation/dbcan_summary \
-    --top_n_families 40
+    --top_n 40
+
+
+################
+# antismash
+
+python PT_bacterial_assembly_interogation/prepare_annotations/summarise_antismash_results.py \
+    --parsed_antismash_dir /home/pthorpe001/david_bul/pthorpe001/2026_20th_March_Microbes_NG/post_annotation/antismash_parsed \
+    --out_dir /home/pthorpe001/david_bul/pthorpe001/2026_20th_March_Microbes_NG/post_annotation/antismash_summary \
+    --top_n 40
