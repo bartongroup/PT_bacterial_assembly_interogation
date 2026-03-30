@@ -34,7 +34,7 @@ python PT_bacterial_assembly_interogation/prepare_annotations/plot_ko_pcoa_and_i
     --top_n_intersections 20
 
 
-python ko_group_enrichment.py \
+python PT_bacterial_assembly_interogation/prepare_annotations/ko_group_enrichment.py \
     --ko_matrix_tsv /home/pthorpe001/david_bul/pthorpe001/2026_20th_March_Microbes_NG/post_annotation/ko_matrices/ko_presence_absence_matrix.tsv \
     --metadata_tsv /home/pthorpe001/david_bul/pthorpe001/2026_20th_March_Microbes_NG/post_annotation/metadata/isolate_groups.tsv \
     --group_column group \
@@ -44,6 +44,27 @@ python ko_group_enrichment.py \
 
 
 
-python plot_pgpr_heatmap.py \
+python PT_bacterial_assembly_interogation/prepare_annotations/plot_pgpr_heatmap.py \
     --pgpr_matrix_tsv /home/pthorpe001/david_bul/pthorpe001/2026_20th_March_Microbes_NG/post_annotation/pgpr_screen/pgpr_presence_absence_matrix.tsv \
     --out_dir /home/pthorpe001/david_bul/pthorpe001/2026_20th_March_Microbes_NG/post_annotation/pgpr_heatmap
+
+
+###################
+# GO
+
+python PT_bacterial_assembly_interogation/prepare_annotations/build_go_matrices.py \
+    --go_long_tsv /home/pthorpe001/david_bul/pthorpe001/2026_20th_March_Microbes_NG/post_annotation/eggnog_parsed/eggnog_go_long.tsv \
+    --out_dir /home/pthorpe001/david_bul/pthorpe001/2026_20th_March_Microbes_NG/post_annotation/go_matrices
+
+
+python plot_go_pcoa_and_intersections.py \
+    --go_matrix_tsv /home/pthorpe001/david_bul/pthorpe001/2026_20th_March_Microbes_NG/post_annotation/go_matrices/go_presence_absence_matrix.tsv \
+    --out_dir /home/pthorpe001/david_bul/pthorpe001/2026_20th_March_Microbes_NG/post_annotation/go_pcoa_and_intersections \
+    --top_n_intersections 20
+
+##################
+# dbCAN
+python summarise_dbcan_results.py \
+    --cazy_matrix_tsv /home/pthorpe001/david_bul/pthorpe001/2026_20th_March_Microbes_NG/post_annotation/dbcan_parsed/dbcan_cazy_family_presence_absence_matrix.tsv \
+    --out_dir /home/pthorpe001/david_bul/pthorpe001/2026_20th_March_Microbes_NG/post_annotation/dbcan_summary \
+    --top_n_families 40
