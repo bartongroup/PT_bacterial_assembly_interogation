@@ -20,10 +20,10 @@ Outputs
 - ko_jaccard_distance_matrix.tsv
 - ko_pcoa_coordinates.tsv
 - ko_pcoa_variance_explained.tsv
-- ko_pcoa_plot.png
+- ko_pcoa_plot.pdf
 - ko_isolate_membership_long.tsv
 - ko_intersection_summary.tsv
-- ko_top_intersections.png
+- ko_top_intersections.pdf
 """
 
 from __future__ import annotations
@@ -231,7 +231,7 @@ def save_pcoa_plot(
     variance_df : pd.DataFrame
         Variance explained table.
     output_path : Path
-        Output PNG path.
+        Output pdf path.
     """
     pc1_var = variance_df.loc[0, "variance_explained_pct"]
     pc2_var = variance_df.loc[1, "variance_explained_pct"]
@@ -268,7 +268,7 @@ def save_intersection_plot(
     summary_df : pd.DataFrame
         KO intersection summary table.
     output_path : Path
-        Output PNG path.
+        Output pdf path.
     top_n : int
         Number of top intersections to plot.
     """
@@ -346,7 +346,7 @@ def main() -> None:
     save_pcoa_plot(
         coords_df=coords_df,
         variance_df=variance_df,
-        output_path=out_dir / "ko_pcoa_plot.png",
+        output_path=out_dir / "ko_pcoa_plot.pdf",
     )
 
     membership_df, summary_df = build_intersection_tables(ko_df=ko_df)
@@ -363,7 +363,7 @@ def main() -> None:
 
     save_intersection_plot(
         summary_df=summary_df,
-        output_path=out_dir / "ko_top_intersections.png",
+        output_path=out_dir / "ko_top_intersections.pdf",
         top_n=args.top_n_intersections,
     )
 
